@@ -13,7 +13,7 @@ class AiqiyiSpider:
         self.base_url = base_url
         self.full_url = base_url + route
         self.rank_name = rank_name
-        self.result_dir = os.path.join('results')
+        self.result_dir = os.path.join('results1')
         self.picture_dir = os.path.join('pictures', rank_name)
         if not os.path.exists(self.result_dir):
             os.makedirs(self.result_dir)

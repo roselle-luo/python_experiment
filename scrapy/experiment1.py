@@ -4,8 +4,6 @@ from urllib.robotparser import RobotFileParser
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
-
-
 from movie import Movie
 
 url = 'https://www.iqiyi.com/ranks1/1/0'
@@ -18,6 +16,7 @@ headers = {
 
 results = []
 
+
 def check_permission():
     rp = RobotFileParser()
     rp.set_url(robot_url)
@@ -27,6 +26,7 @@ def check_permission():
         return True
     else:
         return False
+
 
 def download_image(movies):
     if not os.path.exists('pictures1'):
@@ -53,23 +53,25 @@ def save_movie(movies):
             result_file.write("\n\n")
         print('保存电影信息完成')
 
+
 def getData(html_text):
-        movies = html_text.select(
-            '#__layout > div > div.ph-skin-wrap > div:nth-child(3) > div:nth-child(2) > div > div.rvi__list > a')
-        for movie in movies:
-            heat = movie.select_one('#__layout > div > div.ph-skin-wrap > div:nth-child(3) > div:nth-child(2) > div > '
-                                    'div.rvi__list > a > div.rvi__right > div > span').text.strip()
-            post = movie.select_one('div.rvi__img__box > picture').get('id')
-            full_post_url = 'https:' + post
-            content = movie.select_one('div.rvi__con')
-            title = content.select_one('div.rvi__tit1').text.strip()
-            filter = content.select_one('div.rvi__type1').text.strip()
-            introduce = content.select_one('p').text.strip()
-            single_movie = Movie(name=title, filter=filter, introduce=introduce, post=full_post_url, heat=heat)
-            results.append(single_movie)
-            print(single_movie)
-        print("爬取完成")
-        print(len(results))
+    movies = html_text.select(
+        '#__layout > div > div.ph-skin-wrap > div:nth-child(3) > div:nth-child(2) > div > div.rvi__list > a')
+    for movie in movies:
+        heat = movie.select_one('#__layout > div > div.ph-skin-wrap > div:nth-child(3) > div:nth-child(2) > div > '
+                                'div.rvi__list > a > div.rvi__right > div > span').text.strip()
+        post = movie.select_one('div.rvi__img__box > picture').get('id')
+        full_post_url = 'https:' + post
+        content = movie.select_one('div.rvi__con')
+        title = content.select_one('div.rvi__tit1').text.strip()
+        filter = content.select_one('div.rvi__type1').text.strip()
+        introduce = content.select_one('p').text.strip()
+        single_movie = Movie(name=title, filter=filter, introduce=introduce, post=full_post_url, heat=heat)
+        results.append(single_movie)
+        print(single_movie)
+    print("爬取完成")
+    print(len(results))
+
 
 def replace_invalid_name(file_name):
     invalid_chars = ['\\', '/', ':', '*', '?', '"', '<', '>', '|']
@@ -95,6 +97,7 @@ def test_driver():
     soup = BeautifulSoup(driver.page_source, "html.parser")
     return soup
 
+
 if __name__ == '__main__':
     isValid = check_permission()
     if isValid:
@@ -104,5 +107,3 @@ if __name__ == '__main__':
         download_image(results)
     else:
         print('不允许爬')
-
-
